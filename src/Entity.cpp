@@ -4,7 +4,7 @@
 
 void EntityList::printEntLocations()
 {
-    for (int i{}; i < 12; ++i) //when we have the max number of players replace the number in the loop
+    for (int i{}; i < maxNumbersOfPlayers; ++i) //should not overflow now as 
     {
         auto CurrentEntity = entList->entities[i];
 

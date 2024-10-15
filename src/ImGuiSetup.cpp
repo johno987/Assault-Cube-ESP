@@ -1,23 +1,36 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-#include <iostream>
+#include "Setup.h"
 #include <windows.h>
-#include <TlHelp32.h>
 #include "Globals.h"
-#include <algorithm>
-#include "Entity.h"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+void Draw()
+{
+    ImGui::Begin("Hello AssaultCube", NULL, 
+        ImGuiWindowFlags_NoTitleBar |
+        ImGuiWindowFlags_MenuBar);
 
-void glfw_error_callback(int error, const char* description) 
+    ImGui::Text("This is the first window");
+    ImGui::SliderInt("LocalPlayer Health", &LocalPlayer->Health, 10, 10000);
+
+    //print enemeny positions
+    ImGui::Text("Printing local player positon: X: %f Y: %f Z: %f", LocalPlayer->HeadPos.x, LocalPlayer->HeadPos.y, LocalPlayer->HeadPos.z);
+    ImGui::SliderFloat("Local player foot height", &LocalPlayer->FeetPos.z, 0.0f, 100.0f);
+
+
+    //draw a cirlce in centre of screen
+    ImDrawList* draw_list = ImGui::GetWindowDrawList();
+    ImVec2 screenSize = ImGui::GetWindowSize();
+    draw_list->AddRectFilled(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), ImColor(255, 0, 0, 128));
+
+    ImGui::End();
+}
+
+
+void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 }
 
-int ImGuiCode()
+int SetupImgui()
 {
     // Initialize GLFW
     glfwSetErrorCallback(glfw_error_callback);
@@ -28,6 +41,9 @@ int ImGuiCode()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
+
+
 
     // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(1280, 720, "ImGui Example", NULL, NULL);
@@ -63,10 +79,12 @@ int ImGuiCode()
 
         // Create a simple ImGui window
         {
-            ImGui::Begin("Hello, world!");
+            //ImGui::ShowDemoWindow();
+            Draw();
+           /* ImGui::Begin("Hello, world!");
             ImGui::Text("This is some text.");
-            ImGui::SliderFloat("Float", &io.DeltaTime, 0.0f, 1.0f);
-            ImGui::End();
+            ImGui::SliderFloat("Float", &somefloat, 0.0f, 1.0f);
+            ImGui::End()*/;
         }
 
         // Render ImGui
@@ -78,6 +96,12 @@ int ImGuiCode()
 
         // Swap buffers
         glfwSwapBuffers(window);
+
+        //close out of imgui menu
+        if (GetAsyncKeyState(VK_F1) & 1)
+        {
+            break;
+        }
     }
 
     // Cleanup
@@ -90,59 +114,3 @@ int ImGuiCode()
 
     return 0;
 }
-
-void SpawnConsole()
-{
-	AllocConsole();
-	freopen_s(&file, "CONOUT$", "w", stdout);
-	std::cout << "Is this console working?\n";
-}
-DWORD MainHackThread(HMODULE hmodule)
-{
-	//Spawn the console
-	SpawnConsole();
-
-	//execution loop
-	while (true)
-	{
-		if (GetAsyncKeyState(VK_INSERT) & 1)
-		{
-			//Set health to 5000
-			std::cout << "Health set to 5000\n";
-			LocalPlayer->Health = 5000;
-		}
-		if (GetAsyncKeyState(VK_HOME) & 1)
-		{
-			//entList->printEntLocations();
-            ImGuiCode();
-		}
-		if (GetAsyncKeyState(VK_END) & 1)
-		{
-			break;
-		}
-	}
-
-	fclose(file);
-	FreeConsole();
-	FreeLibraryAndExitThread(hmodule, 0);
-
-	return 0;
-}
-
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
-{
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH:
-	{
-		auto Handle = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)MainHackThread, hModule, 0, nullptr);
-		CloseHandle(Handle);
-	}
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
-		break;
-	}
-	return TRUE;
-}
-
