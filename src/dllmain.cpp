@@ -6,14 +6,7 @@
 #include <algorithm>
 #include "Entity.h"
 #include "Setup.h"
-#include "MinHook.h"
-//#include <GL/glew.h>
-//#include <GLFW/glfw3.h>
-//#include "imgui.h"
-//#include "imgui_impl_glfw.h"
-//#include "imgui_impl_opengl3.h"
-
-
+#include "Hook.h"
 
 void SpawnConsole()
 {
@@ -29,17 +22,21 @@ DWORD MainHackThread(HMODULE hmodule)
 	//execution loop
 	while (true)
 	{
-		if (GetAsyncKeyState(VK_INSERT) & 1)
+		if (GetAsyncKeyState(VK_F1) & 1)
 		{
 			//Set health to 5000
 			std::cout << "Health set to 5000\n";
 			LocalPlayer->Health = 5000;
 		}
-		if (GetAsyncKeyState(VK_HOME) & 1)
+		if (GetAsyncKeyState(VK_INSERT) & 1)
 		{
-			//entList->printEntLocations();
-			SetupImgui();
+			EnableHook();
 		}
+		if (GetAsyncKeyState(VK_DELETE) & 1)
+		{
+			DisableHook();
+		}
+
 		if (GetAsyncKeyState(VK_END) & 1)
 		{
 			break;

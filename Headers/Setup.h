@@ -5,5 +5,9 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <iostream>
+#include <windows.h>
 
-int SetupImgui();
+
+void DrawRendering(HDC hdc);
+void SetupRendering(HDC hdc);
+
