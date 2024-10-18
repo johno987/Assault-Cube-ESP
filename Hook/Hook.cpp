@@ -13,7 +13,10 @@ BOOL _stdcall MyDetourFunction(HDC HandleToDeviceContext)
 {
 	std::cout << "Hooking from inside the swap buffers function\n";
 	ESP::Setup::SetupImgui(HandleToDeviceContext);
-	ESP::Draw::DrawESP();
+	ESP::Draw::shouldDraw();
+	/*ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());*/
+	//ESP::Draw::DrawESP();
 	return newAddressForExisting(HandleToDeviceContext);
 }
 

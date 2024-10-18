@@ -1,5 +1,7 @@
 #pragma once
 #include <windows.h>
+#include "Entity.h"
+#include "Vector3/Vector3.h"
 
 namespace ESP
 {
@@ -9,6 +11,7 @@ namespace ESP
 	}
 	namespace Draw
 	{
-		void DrawESP();
+		void shouldDraw();
+		void DrawESP(Entity* ent, Vector screen);
 	}
 }
