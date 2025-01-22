@@ -29,10 +29,14 @@
 
 bool isEnemy(Entity* ent)
 {
-	if (ent->TeamNumber != LocalPlayer->TeamNumber)
+	//removed the team number check, doesnt seem to be valid for free for all
+	if (strncmp(ent->Name, LocalPlayer->Name, 16) != 0)
 	{
 		return true;
 	}
+
+	//if (ent->TeamNumber != LocalPlayer->TeamNumber)
+	//	return true;
 	return false;
 }
 
@@ -40,6 +44,7 @@ bool isAlive(Entity* ent)
 {
 	if (ent->Health > 0)
 		return true;
+	return false;
 }
 
 void DrawESP(Entity* ent)
@@ -56,7 +61,7 @@ void DrawESP(Entity* ent)
 
 void GetPotentialRenders()
 {
-	for (int i{}; i < maxNumbersOfPlayers; ++i)
+	for (int i{}; i < *maxNumbersOfPlayers; ++i)
 	{
 		if (entList->entities[i] != nullptr)
 		{

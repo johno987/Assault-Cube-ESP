@@ -26,7 +26,9 @@ DWORD MainHackThread(HMODULE hmodule)
 		{
 			//Set health to 5000
 			std::cout << "Health set to 5000\n";
+			std::cout << "Ammo set to 5000\n";
 			LocalPlayer->Health = 5000;
+			LocalPlayer->CurrentWeapon->Gun->CurrentAmmo = 5000;
 		}
 		if (GetAsyncKeyState(VK_INSERT) & 1)
 		{

@@ -29,8 +29,13 @@ bool worldToScreen(Vector pos, Vector& screen, float matrix[16], int windowWidth
 	NDC.y = clipCoordinates.y / clipCoordinates.w;
 	NDC.z = clipCoordinates.z / clipCoordinates.w;
 
-	screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
-	screen.y = (windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);
+	//new NDC mapping calcs
+	screen.x = (NDC.x + 1.0f) * (windowWidth / 2.0f);
+	screen.y = (1.0f - NDC.y) * (windowHeight / 2.0f);
+
+	//old NDC calcs
+	/*screen.x = (windowWidth / 2 * NDC.x) + (NDC.x + windowWidth / 2);
+	screen.y = (windowHeight / 2 * NDC.y) + (NDC.y + windowHeight / 2);*/
 
 	return true;
 }
@@ -71,7 +76,14 @@ void ESP::Draw::DrawESP(Entity* ent, Vector Screen)
 {
 	//yse screen coords to draw position x and y 
 
-	ImVec2 BotPosition = ImVec2(Screen.x - 2.25f, Screen.y - 2.25f);
+	ImVec2 BotPosition = ImVec2(Screen.x, Screen.y);
+	ImVec2 baseOfScreen = ImVec2(950.0f / 2, 750);
+
+	float boxWidth = 50.0f;
+	float boxHeight = 100.0f;
+
+	ImVec2 rect_min = ImVec2(BotPosition.x - boxWidth / 2, BotPosition.y - boxHeight / 2); //top left
+	ImVec2 rect_max = ImVec2(BotPosition.x + boxWidth / 2, BotPosition.y + boxHeight / 2); //bottom right
 
 	//get the viewport size
 	GLint viewport[4];
@@ -101,7 +113,10 @@ void ESP::Draw::DrawESP(Entity* ent, Vector Screen)
 	//draw_list->AddLine(LineMin, LineMax, Linecolour);
 
 	//ImVec2 Centre = ImVec2(viewport[2] / 2, viewport[3] / 2);
-	draw_list->AddCircle(BotPosition, 50.0f, colour);
+	// 
+	//draw_list->AddCircle(BotPosition, 50.0f, colour);
+	draw_list->AddRect(rect_min, rect_max, colour);
+	draw_list->AddLine(baseOfScreen, BotPosition, colour);
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -111,7 +126,7 @@ void ESP::Draw::DrawESP(Entity* ent, Vector Screen)
 
 void ESP::Draw::shouldDraw()
 {
-	for (int i{}; i < maxNumbersOfPlayers; ++i)
+	for (int i{}; i < *maxNumbersOfPlayers; ++i)
 	{
 		if (entList->entities[i] != nullptr)
 		{
