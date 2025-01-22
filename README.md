@@ -17,6 +17,12 @@ To build and run this project, you will need:
 - **C++ Compiler**: Required for building the project.
 - **Assault Cube**: Installed and running on your system.
 
+## Screenshots
+
+### ESP Overlay
+![ESP Overlay](Screenshots/ESP_Screenshot.jpg)
+![ESP Overlay](Screenshots/ESP_Screenshot2.jpg)
+
 ## Setup
 
 ### 1. Clone the Repository
@@ -26,7 +32,6 @@ cd Assault-Cube-ESP
 ```
 
 ### 2. Install Dependencies
-- Download and install the [DirectX SDK](https://www.microsoft.com/en-us/download/details.aspx?id=6812).
 - Ensure Visual Studio is installed with the Desktop Development with C++ workload.
 
 ### 3. Open the Project
